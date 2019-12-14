@@ -1,10 +1,10 @@
 # kubernetes-cluster-vm-vagrant
-Manually install Kubernetes on Oracle Linux 7 Virtual Boxes on your laptop in minutes and with few commands with Vagrant
+Manually install Kubernetes on Oracle Linux 7 Virtual Boxes on your laptop :computer: in minutes and with few commands with Vagrant
 
 ## Prerequisites
-Install [Oracle VM VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-Install [Vagrant](https://vagrantup.com/)
-An account in [Oracle Container Registry](https://container-registry.oracle.com/)
+- Install [Oracle VM VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+- Install [Vagrant](https://vagrantup.com/)
+- An account in [Oracle Container Registry](https://container-registry.oracle.com/)
 
 ## References: 
 - https://blogs.oracle.com/scoter/oracle-vm-virtualbox-get-kubernetes-cluster-running-in-minutes
@@ -28,7 +28,7 @@ Within the `master` guest, run the command below to run a shell with root privil
 ```
 $ sudo -s;
 ```
-If you face this issue that outputs in the terminal,
+:warning: If you face this issue that outputs in the terminal,
 ```console
     master: [ERROR] Please allow iptables default FORWARD rule to ACCEPT
     master:         the way to do it:
@@ -66,7 +66,7 @@ I1213 23:15:37.969880    3427 version.go:236] remote version is much newer: v1.1
 on the worker nodes
 [root@master vagrant]# 
 ```
-### 1.3. Build Kubernetes worker server (repeat the same for worker2 server)
+### 1.3. Build Kubernetes worker server
 On a new terminal, start a new VirtualBox named `worker1` using vagrant and `ssh` into it:
 ```
 $ vagrant up worker1; vagrant ssh worker1
@@ -75,7 +75,7 @@ Within the `worker1` guest, run the command below to run a shell with root privi
 ```
 $ sudo -s;
 ```
-If you face this issue that outputs in the terminal,
+:warning: If you face this issue that outputs in the terminal,
 ```console
     worker1: [ERROR] Please allow iptables default FORWARD rule to ACCEPT
     worker1:         the way to do it:
@@ -103,7 +103,10 @@ Run 'kubectl get nodes' on the master to see this node join the cluster.
 /vagrant/scripts/kubeadm-setup-worker.sh: Worker node ready
 [root@worker1 vagrant]# 
 ```
-### 1.4. in `master` machine, run as `vagrant` user (and **NOT** `root` user):
+:arrow_heading_up: ***repeat the same for worker2 server*** :arrow_heading_up:
+
+### 1.4. Checking the k8s cluster
+In `master` machine, run as `vagrant` user (and **NOT** `root` user):
 ```
 $ kubectl get nodes
 $ kubectl cluster-info
