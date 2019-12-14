@@ -126,7 +126,143 @@ KubeDNS is running at https://192.168.99.100:6443/api/v1/namespaces/kube-system/
 To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
-## 2. Clean up
+## 2. Config host machine to access local k8s
+Within the `master` guest, run the command below to run a shell with root privileges as `root`:
+```
+$ sudo -s;
+```
+`cat` this file:
+```
+$ cat /etc/kubernetes/admin.conf
+```
+Select all the content of the file, and copy it.
+
+In the host machine, create a new file, paste the content on it and save.
+
+My file is located in `/home/wfranchi/k8s.conf`. Then you need to export it, run:
+```
+export KUBECONFIG=~/k8s.conf
+```
+After this, you are able to access the k8s cluster using `kubectl` from your host computer.
+
+Try the folloing commands:
+```
+$ kubectl config view
+
+$ kubectl get pods --all-namespaces
+```
+Output:
+```
+wfranchi@computer:~$ kubectl config view
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: DATA+OMITTED
+    server: https://192.168.99.100:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: kubernetes-admin
+  name: kubernetes-admin@kubernetes
+current-context: kubernetes-admin@kubernetes
+kind: Config
+preferences: {}
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate-data: REDACTED
+    client-key-data: REDACTED
+
+wfranchi@computer:~$ kubectl get pods --all-namespaces
+NAMESPACE     NAME                                        READY   STATUS    RESTARTS   AGE
+kube-system   coredns-b7df4d4c4-kkks7                     1/1     Running   0          93m
+kube-system   coredns-b7df4d4c4-xvtkp                     1/1     Running   0          93m
+kube-system   etcd-master.vagrant.vm                      1/1     Running   0          92m
+kube-system   kube-apiserver-master.vagrant.vm            1/1     Running   0          93m
+kube-system   kube-controller-manager-master.vagrant.vm   1/1     Running   0          93m
+kube-system   kube-flannel-ds-fjsp5                       1/1     Running   0          34m
+kube-system   kube-flannel-ds-llds8                       1/1     Running   0          36m
+kube-system   kube-flannel-ds-r6hbm                       1/1     Running   0          93m
+kube-system   kube-proxy-4dxxr                            1/1     Running   0          93m
+kube-system   kube-proxy-9f4f8                            1/1     Running   0          34m
+kube-system   kube-proxy-k6fkm                            1/1     Running   0          36m
+kube-system   kube-scheduler-master.vagrant.vm            1/1     Running   0          93m
+kube-system   kubernetes-dashboard-669df9cb5d-x5hgk       1/1     Running   0          93m
+
+```
+## 3. Deploying nginx to the new cluster as an example
+This section just demostrate how to deploy nginx in the new k8s, run them separately:
+```
+$ kubectl create namespace test
+
+$ kubectl create deployment nginx --image=nginx --namespace test
+
+$ kubectl get pods --namespace test
+
+$ kubectl get deployment nginx --namespace test
+
+$ kubectl scale --current-replicas=1 --replicas=10 deployment/nginx --namespace test
+
+$ kubectl get pods --namespace test
+
+$ kubectl delete deployment nginx --namespace test
+
+$ kubectl delete namespace test
+```
+Output:
+```console
+wfranchi@computer:~$ kubectl create namespace test
+namespace/test created
+
+wfranchi@computer:~$ kubectl create deployment nginx --image=nginx --namespace test
+deployment.apps/nginx created
+
+wfranchi@computer:~$ kubectl get pods --namespace test
+NAME                    READY   STATUS              RESTARTS   AGE
+nginx-55bd7c9fd-8hm29   0/1     ContainerCreating   0          17s
+
+wfranchi@computer:~$ kubectl get deployment nginx --namespace test
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+nginx   1         1         1            1           39s
+
+wfranchi@computer:~$ kubectl scale --current-replicas=1 --replicas=10 deployment/nginx --namespace test
+deployment.extensions/nginx scaled
+
+wfranchi@computer:~$ kubectl get pods --namespace test
+NAME                    READY   STATUS              RESTARTS   AGE
+nginx-55bd7c9fd-25xk9   1/1     Running             0          29s
+nginx-55bd7c9fd-428vm   0/1     ContainerCreating   0          29s
+nginx-55bd7c9fd-4wrjh   0/1     ContainerCreating   0          29s
+nginx-55bd7c9fd-8hm29   1/1     Running             0          83s
+nginx-55bd7c9fd-cn799   1/1     Running             0          29s
+nginx-55bd7c9fd-fdxpv   0/1     ContainerCreating   0          29s
+nginx-55bd7c9fd-nnlcp   1/1     Running             0          29s
+nginx-55bd7c9fd-nzkkq   1/1     Running             0          29s
+nginx-55bd7c9fd-w4pg6   0/1     ContainerCreating   0          30s
+nginx-55bd7c9fd-zcr4d   0/1     ContainerCreating   0          29s
+
+wfranchi@computer:~$ kubectl get pods --namespace test
+NAME                    READY   STATUS    RESTARTS   AGE
+nginx-55bd7c9fd-25xk9   1/1     Running   0          47s
+nginx-55bd7c9fd-428vm   1/1     Running   0          47s
+nginx-55bd7c9fd-4wrjh   1/1     Running   0          47s
+nginx-55bd7c9fd-8hm29   1/1     Running   0          101s
+nginx-55bd7c9fd-cn799   1/1     Running   0          47s
+nginx-55bd7c9fd-fdxpv   1/1     Running   0          47s
+nginx-55bd7c9fd-nnlcp   1/1     Running   0          47s
+nginx-55bd7c9fd-nzkkq   1/1     Running   0          47s
+nginx-55bd7c9fd-w4pg6   1/1     Running   0          48s
+nginx-55bd7c9fd-zcr4d   1/1     Running   0          47s
+
+wfranchi@computer:~$ kubectl delete deployment nginx --namespace test
+deployment.extensions "nginx" deleted
+
+wfranchi@computer:~$ kubectl delete namespace test
+namespace "test" deleted
+```
+
+## 4. Clean up
 To destroy the VMs, on the host macine, `cd` into the folder you cloned before `vagrant-boxes/Kubernetes` and run:
 ```
 $ vagrant destroy
