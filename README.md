@@ -141,7 +141,7 @@ In the host machine, create a new file, paste the content on it and save.
 
 My file is located in `/home/wfranchi/k8s.conf`. Then you need to export it, run:
 ```
-export KUBECONFIG=~/k8s.conf
+$ export KUBECONFIG=~/k8s.conf
 ```
 After this, you are able to access the k8s cluster using `kubectl` from your host computer.
 
@@ -152,7 +152,7 @@ $ kubectl config view
 $ kubectl get pods --all-namespaces
 ```
 Output:
-```
+```console
 wfranchi@computer:~$ kubectl config view
 apiVersion: v1
 clusters:
