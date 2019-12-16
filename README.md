@@ -1,4 +1,4 @@
-# kubernetes-cluster-vm-vagrant
+# `kubernetes-cluster-vm-vagrant`
 Manually install Kubernetes on Oracle Linux 7 Virtual Boxes on your laptop :computer: in minutes and with few commands with Vagrant
 
 ## Prerequisites
