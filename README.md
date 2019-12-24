@@ -1,5 +1,5 @@
 # `kubernetes-cluster-vm-vagrant`
-Manually install Kubernetes on Oracle Linux 7 Virtual Boxes on your laptop :computer: in minutes and with few commands with Vagrant
+Manually install Kubernetes cluster on Oracle Linux 7 VirtualBox on your laptop :computer: in minutes and with few commands with Vagrant
 
 ## Prerequisites
 - Install [Oracle VM VirtualBox](https://www.virtualbox.org/wiki/Downloads)
@@ -11,6 +11,7 @@ Manually install Kubernetes on Oracle Linux 7 Virtual Boxes on your laptop :comp
 - https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 
 ## 1. Creating the k8s cluster
+We are going to build a cluster with 3 nodes: 1 master and 2 workers.
 
 ### 1.1. Clone the GitHub repository for Kubernetes Vagrant boxes
 ```
