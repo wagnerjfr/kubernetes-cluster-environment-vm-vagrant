@@ -264,7 +264,7 @@ namespace "test" deleted
 ```
 
 ## 4. Clean up
-To destroy the VMs, on the host macine, `cd` into the folder you cloned before `vagrant-boxes/Kubernetes` and run:
+To destroy the VMs, on the host machine, `cd` into the folder you cloned before `vagrant-boxes/Kubernetes` and run:
 ```
 $ vagrant destroy
 ```
