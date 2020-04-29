@@ -146,7 +146,7 @@ $ export KUBECONFIG=~/k8s.conf
 ```
 After this, you are able to access the k8s cluster using `kubectl` from your host computer.
 
-Try the folloing commands:
+Try the following commands:
 ```
 $ kubectl config view
 
