@@ -193,7 +193,9 @@ kube-system   kubernetes-dashboard-669df9cb5d-x5hgk       1/1     Running   0   
 
 ```
 ## 3. Deploying nginx to the new cluster as an example
-This section just demostrates how to deploy nginx in the new k8s, run them separately:
+This section demostrates how to deploy nginx in the new k8s.
+
+Run the commands below separately:
 ```
 $ kubectl create namespace test
 
